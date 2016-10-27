@@ -8,49 +8,71 @@ import { CaseComponent } from '../case/case.Component';
 })
 export class TabComponent implements OnInit 
 {
-  public tab : any[][];
+  private grille : any[][];
+  private tailleGrille : number = 9;
+  private counter = Array<number>();
+  private numMines : number = 0;
+  private verifNumMines : number = 5;
 
   constructor() 
   {
-    /*this.tab = [];
+    this.initCounter(this.tailleGrille);
 
-    for(var i=0; i<9; i++)
-    {
-        this.tab[i] = [];
+    this.initGrille(this.tailleGrille);
 
-        for(var j=0; j<9; j++)
-          this.tab[i][j] = new CaseComponent();
-    }*/
+    this.verificationMines(this.verifNumMines, this.tailleGrille);
 
-    this.tab = [
-      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
-      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
-      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
-      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
-      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
-      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
-      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
-      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
-      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}]
-    ];
-
-    this.verificationMines(10);
-   }
+    console.log(this.numMines);
+  }
 
   ngOnInit() 
   {
   }
 
-  range(num:number)
+  initCounter(size:number)
   {
-    return Array(num);
+    for(let i=0; i<size; i++)
+      this.counter.push(i);
   }
 
-  //Vérifier le nombre de mines sur le champs
-  verificationMines(num: number)
+  initGrille(size:number)
   {
-    if(CaseComponent.nbMines < num)
-    {}
+    this.grille = [];
+
+    for(let i=0; i<size; i++)
+    {
+      this.grille[i] = [];
+
+      for(let j=0; j<size; j++)
+      {
+        let randomMine = (this.numMines < this.verifNumMines && Math.random() < 0.1? (true, this.numMines++):false);
+        
+        this.grille[i][j] = 
+        {
+          isRevealed: false,
+          isMine: randomMine
+        }
+      }
+    }
+  }
+
+  //Vérifier le nombre de mines sur le champ
+  verificationMines(num: number, size:number)
+  {
+    while(this.numMines < this.verifNumMines)
+    {
+      for(let i=0; i<size; i++)
+      {
+        for(let j=0; j<size; j++)
+        {
+          if(this.grille[i][j].isMine == false)
+            this.grille[i][j].isMine = (Math.random() < 0.1? (true, this.numMines++):false);
+
+          if(this.numMines === this.verifNumMines)
+            return;  
+        }
+      }
+    }
   }
 
 }

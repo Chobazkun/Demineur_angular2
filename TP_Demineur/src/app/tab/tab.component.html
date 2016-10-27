@@ -1,10 +1,10 @@
 
 <table>
-  <div class="ligne" *ngFor="let i of range(9)">
+  <div class="ligne" *ngFor="let i of counter">
     <tr>
-      <div class="col" *ngFor="let j of range(9)">
+      <div class="col" *ngFor="let j of counter">
         <td>
-          <app-case [isMine]="tab[ligne][col].isRevealed"></app-case>
+          <app-case [proprietes]="grille[i][j]"></app-case>
         </td>
       </div>
     </tr> 

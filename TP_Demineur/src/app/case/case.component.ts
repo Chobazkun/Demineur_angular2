@@ -10,21 +10,15 @@ export class CaseComponent implements OnInit {
   static urlCovered : string = "img/covered.png";
   static urlEmpty : string = "img/empty.png";
   static urlMine: string = "img/mine.png";
-  static nbMines : number = 0;
 
   private urlImage : string;
   
   @Input()
-  public isRevealed : boolean = false;
-  
-  @Input()
-  public isMine : boolean = false;
+  proprietes = null;
 
 
   constructor() 
   {
-    this.placerMine();
-
     this.urlImage = CaseComponent.urlCovered;
   }
 
@@ -34,35 +28,25 @@ export class CaseComponent implements OnInit {
 
   cliqueCase()
   {
-    this.isRevealed = !this.isRevealed;
+    this.proprietes.isRevealed = !this.proprietes.isRevealed;
     this.majUrl();  
   }
 
   majUrl()
   {
-    if(this.isMine == false)
+    if(this.proprietes.isMine == false)
     {
-      if(this.isRevealed == true)
+      if(this.proprietes.isRevealed == true)
         this.urlImage = CaseComponent.urlEmpty;
       else
         this.urlImage = CaseComponent.urlCovered;
     }
     else
     {
-      if(this.isRevealed == true)
+      if(this.proprietes.isRevealed == true)
         this.urlImage = CaseComponent.urlMine;
       else
         this.urlImage = CaseComponent.urlCovered;
     }
   }
-
-  placerMine()
-  {
-    if( CaseComponent.nbMines < 10 && Math.random() < 0.1)
-    {
-      this.isMine = true;
-      CaseComponent.nbMines++;
-    }
-  }
-
 }
