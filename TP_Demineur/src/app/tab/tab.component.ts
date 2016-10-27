@@ -4,18 +4,41 @@ import { CaseComponent } from '../case/case.Component';
 @Component({
   selector: 'app-tab',
   templateUrl: './tab.component.html',
-  styleUrls: ['./tab.component.css']
+  styleUrls: ['./tab.component.css'],
 })
-export class TabComponent implements OnInit {
-
-  public champMines : CaseComponent[][];
+export class TabComponent implements OnInit 
+{
+  public tab : any[][];
 
   constructor() 
   {
+    /*this.tab = [];
+
+    for(var i=0; i<9; i++)
+    {
+        this.tab[i] = [];
+
+        for(var j=0; j<9; j++)
+          this.tab[i][j] = new CaseComponent();
+    }*/
+
+    this.tab = [
+      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
+      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
+      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
+      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
+      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
+      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
+      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
+      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}],
+      [{isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}, {isRevealed: false, isMine: true}]
+    ];
+
     this.verificationMines(10);
    }
 
-  ngOnInit() {
+  ngOnInit() 
+  {
   }
 
   range(num:number)
@@ -23,12 +46,11 @@ export class TabComponent implements OnInit {
     return Array(num);
   }
 
-
   //Vérifier le nombre de mines sur le champs
   verificationMines(num: number)
   {
-    //if(CaseComponent.nbMines <10)
-
+    if(CaseComponent.nbMines < num)
+    {}
   }
 
 }

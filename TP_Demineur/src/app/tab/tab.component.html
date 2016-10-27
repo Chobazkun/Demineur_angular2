@@ -4,11 +4,12 @@
     <tr>
       <div class="col" *ngFor="let j of range(9)">
         <td>
-          <app-case></app-case>
+          <app-case [isMine]="tab[ligne][col].isRevealed"></app-case>
         </td>
       </div>
     </tr> 
   </div>
 </table>
+
 
 

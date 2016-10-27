@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-case',
@@ -7,20 +7,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CaseComponent implements OnInit {
 
-  private urlCovered : string = "img/covered.png";
-  private urlEmpty : string = "img/empty.png";
-  private urlMine: string = "img/mine.png";
+  static urlCovered : string = "img/covered.png";
+  static urlEmpty : string = "img/empty.png";
+  static urlMine: string = "img/mine.png";
   static nbMines : number = 0;
 
-  public urlImage : string;
-  public value : boolean = false;
-  public mine : boolean = false;
+  private urlImage : string;
+  
+  @Input()
+  public isRevealed : boolean = false;
+  
+  @Input()
+  public isMine : boolean = false;
+
 
   constructor() 
   {
     this.placerMine();
 
-    this.urlImage = this.urlCovered;
+    this.urlImage = CaseComponent.urlCovered;
   }
 
   ngOnInit() 
@@ -29,37 +34,35 @@ export class CaseComponent implements OnInit {
 
   cliqueCase()
   {
-    this.value = !this.value;
+    this.isRevealed = !this.isRevealed;
     this.majUrl();  
   }
 
   majUrl()
   {
-    if(this.mine == false)
+    if(this.isMine == false)
     {
-      if(this.value == true)
-        this.urlImage = this.urlEmpty;
+      if(this.isRevealed == true)
+        this.urlImage = CaseComponent.urlEmpty;
       else
-        this.urlImage = this.urlCovered;
+        this.urlImage = CaseComponent.urlCovered;
     }
     else
     {
-      if(this.value == true)
-        this.urlImage = this.urlMine;
+      if(this.isRevealed == true)
+        this.urlImage = CaseComponent.urlMine;
       else
-        this.urlImage = this.urlCovered;
+        this.urlImage = CaseComponent.urlCovered;
     }
   }
 
-  //Ajouter condition sur le nombre de mines à poser
   placerMine()
   {
-    if(Math.random() < 0.1)
+    if( CaseComponent.nbMines < 10 && Math.random() < 0.1)
     {
-      this.mine = true;
+      this.isMine = true;
       CaseComponent.nbMines++;
     }
   }
-  
 
 }
