@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 
 @Component({
   selector: 'app-case',
   templateUrl: './case.component.html',
   styleUrls: ['./case.component.css']
 })
-export class CaseComponent implements OnInit {
+export class CaseComponent implements OnInit, OnChanges {
 
   static urlCovered : string = "img/covered.png";
   static urlEmpty : string = "img/empty.png";
@@ -25,6 +25,12 @@ export class CaseComponent implements OnInit {
   @Input()
   proprietes = null;
 
+  @Output()
+  notify: EventEmitter<any> = new EventEmitter<any>();
+
+  @Input()
+  revealedIndexes = null;
+
 
   constructor() 
   {
@@ -35,11 +41,20 @@ export class CaseComponent implements OnInit {
   {
   }
 
-  cliqueCase()
+  ngOnChanges(changes:SimpleChanges)
+  {
+    console.log("Foobar");
+  }
+
+  onClick()
   {
     this.proprietes.isRevealed = !this.proprietes.isRevealed;
-    this.majUrl();  
+    this.majUrl();
+
+    this.notify.emit(this.proprietes.indexes);
   }
+
+
 
   majUrl()
   {
@@ -97,7 +112,5 @@ export class CaseComponent implements OnInit {
       else
         this.urlImage = CaseComponent.urlCovered;
     }
-
-    console.log(this.urlImage);
   }
 }

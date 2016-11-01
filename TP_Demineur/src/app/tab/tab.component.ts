@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CaseComponent } from '../case/case.Component';
 
 @Component({
@@ -12,6 +12,8 @@ export class TabComponent implements OnInit
   private tailleGrille : number = 9;
   private counter = Array<number>();
   private numMines : number = 10;
+  //private revealedIndexes : any[];
+
 
   constructor() 
   {
@@ -49,7 +51,7 @@ export class TabComponent implements OnInit
           isRevealed: false,
           isMine: false,
           isNumber: 0,
-          indices : 
+          indexes : 
           {
             i : i,
             j : j
@@ -97,6 +99,15 @@ export class TabComponent implements OnInit
     }
   }
 
+  onNotify(indexes:any)
+  {
+    console.log(indexes.i+ " "+indexes.j);
+
+    /*for(let i=this.minIndex(indexes.i); i<=this.maxIndex(indexes.i); i++)
+      for(let j=this.minIndex(indexes.j); j<=this.maxIndex(indexes.j); j++)
+        this.grille[i][j].isRevealed = true;*/  
+  }
+
   minIndex(index:number)
   {
     if(index > 0)
@@ -117,5 +128,4 @@ export class TabComponent implements OnInit
   {
     return Math.floor(Math.random() * (this.tailleGrille));
   }
-
 }
