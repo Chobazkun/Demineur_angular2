@@ -11,8 +11,7 @@ export class TabComponent implements OnInit
   private grille : any[][];
   private tailleGrille : number = 9;
   private counter = Array<number>();
-  private numMines : number = 0;
-  private verifNumMines : number = 5;
+  private numMines : number = 10;
 
   constructor() 
   {
@@ -20,9 +19,9 @@ export class TabComponent implements OnInit
 
     this.initGrille(this.tailleGrille);
 
-    this.verificationMines(this.verifNumMines, this.tailleGrille);
+    this.initMines(this.numMines);
 
-    console.log(this.numMines);
+    this.initNumbers();
   }
 
   ngOnInit() 
@@ -45,34 +44,78 @@ export class TabComponent implements OnInit
 
       for(let j=0; j<size; j++)
       {
-        let randomMine = (this.numMines < this.verifNumMines && Math.random() < 0.1? (true, this.numMines++):false);
-        
         this.grille[i][j] = 
         {
           isRevealed: false,
-          isMine: randomMine
+          isMine: false,
+          isNumber: 0,
+          indices : 
+          {
+            i : i,
+            j : j
+          }
         }
       }
     }
   }
 
-  //Vérifier le nombre de mines sur le champ
-  verificationMines(num: number, size:number)
+  initMines(numMines:number)
   {
-    while(this.numMines < this.verifNumMines)
+    for(let i=0; i<numMines; i++)
     {
-      for(let i=0; i<size; i++)
-      {
-        for(let j=0; j<size; j++)
-        {
-          if(this.grille[i][j].isMine == false)
-            this.grille[i][j].isMine = (Math.random() < 0.1? (true, this.numMines++):false);
+      let j = this.getRandomIndex();
+      let k = this.getRandomIndex();
 
-          if(this.numMines === this.verifNumMines)
-            return;  
+      do
+      {
+        if(this.grille[j][k].isMine != true)
+        {
+          this.grille[j][k].isMine = true;
+          break;
+        }
+        
+        j = this.getRandomIndex();
+        k = this.getRandomIndex();
+      }while(true);
+      
+    }
+  }
+
+  initNumbers()
+  {
+    for(let i=0; i<this.tailleGrille; i++)
+    {
+      for(let j=0; j<this.tailleGrille; j++)
+      {
+        if(this.grille[i][j].isMine)
+        {
+          for(let k=this.minIndex(i); k<=this.maxIndex(i); k++)
+            for(let g=this.minIndex(j); g<=this.maxIndex(j); g++)
+                this.grille[k][g].isNumber += 1;
         }
       }
     }
+  }
+
+  minIndex(index:number)
+  {
+    if(index > 0)
+      return index-1;
+    else
+      return 0;
+  }
+
+  maxIndex(index:number)
+  {
+    if(index < this.tailleGrille - 1 )
+      return index+1;
+    else
+      return index;
+  }
+
+  getRandomIndex()
+  {
+    return Math.floor(Math.random() * (this.tailleGrille));
   }
 
 }
