@@ -24,6 +24,10 @@ export class TabComponent implements OnInit
     this.initMines(this.numMines);
 
     this.initNumbers();
+
+    for(let i=0; i<this.tailleGrille; i++)
+      for(let j=0; j<this.tailleGrille; j++)
+        console.log(this.grille[i][j]);
   }
 
   ngOnInit() 
@@ -105,9 +109,7 @@ export class TabComponent implements OnInit
 
     this.revealedIndexes = [];
     
-    this.revealNeighbours(indexes, 0);
-
-   
+    this.manageNeighbours(indexes, 0);
   }
 
   getNeighbours(indexes:any)
@@ -130,43 +132,67 @@ export class TabComponent implements OnInit
 
   testNeighbours(neighbours:any[])
   {
+    let emptyNeighbours : any[] = [];
+    let k=0;
+
     for(let n of neighbours)
     {
-      if(this.grille[n.i][n.j].isMine === true || this.grille[n.i][n.j].isNumber !== 0 )
-        return false;
+      if(this.grille[n.i][n.j].isMine === false && this.grille[n.i][n.j].isNumber === 0 )
+        emptyNeighbours[k++] = n;
     }
 
-    return true;
+    console.log("START");
+    for(let n of emptyNeighbours)
+      console.log(n);
+    console.log("END");
+      
+    return emptyNeighbours;
+  }
+
+  revealNeighbours(neighbours:any[], sizeRevealedIndexes:number)
+  {
+    for(let n of neighbours)
+    {
+      if(n.isMine === false)
+      {
+        this.revealedIndexes[sizeRevealedIndexes++] +=
+        {
+          i : n.i,
+          j : n.j
+        }
+      }
+    }  
   }
 
   manageNeighbours(indexes:any, sizeRevealedIndexes:number)
-  {
-    //this.revealNeighbours(indexes, sizeRevealedIndexes);
+  { 
+    let neighbours = this.getNeighbours(indexes);
 
-    
+    this.revealNeighbours(neighbours, sizeRevealedIndexes);
 
-    for(let n of neighbours)
-      this.revealNeighbours(n, sizeRevealedIndexes, true);
-    
-  }
+    for(let n of this.testNeighbours(neighbours))
+      this.manageNeighbours(n, sizeRevealedIndexes);
 
-  revealNeighbours(indexes:any, sizeRevealedIndexes:number, testNeighbours:boolean)
-  {
-    for(let i=this.minIndex(indexes.i); i<=this.maxIndex(indexes.i); i++)
+    /*for(let i=this.minIndex(indexes.i); i<=this.maxIndex(indexes.i); i++)
       for(let j=this.minIndex(indexes.j); j<=this.maxIndex(indexes.j); j++)
+      {
+        this.revealedIndexes[sizeRevealedIndexes++] = 
         {
-          this.revealedIndexes[sizeRevealedIndexes++] = 
-          {
-            i : i,
-            j : j
-          }
+          i : i,
+          j : j
         }
-      
-    if(testNeighbours === true)
+      }
+
+    if(testNeighbours.length === 0)
+      return;
+    else
     {
       let neighbours : any[] = this.getNeighbours(indexes);
+
+      for(let n of neighbours)
+        this.revealNeighbours(n, sizeRevealedIndexes, this.testNeighbours(n));
       
-    }
+    }*/
   }
 
   minIndex(index:number)
