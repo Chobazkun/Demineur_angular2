@@ -4,7 +4,7 @@
     <tr>
       <div class="col" *ngFor="let j of counter">
         <td>
-          <app-case [proprietes]="grille[i][j]" (notify)="onNotify($event)"></app-case>
+          <app-case [proprietes]="grille[i][j]" (notify)="onNotify($event)" [revealedIndexes]="revealedIndexes"></app-case>
         </td>
       </div>
     </tr> 

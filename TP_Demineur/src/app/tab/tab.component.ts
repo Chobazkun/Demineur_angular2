@@ -12,7 +12,7 @@ export class TabComponent implements OnInit
   private tailleGrille : number = 9;
   private counter = Array<number>();
   private numMines : number = 10;
-  //private revealedIndexes : any[];
+  private revealedIndexes : any;
 
 
   constructor() 
@@ -101,11 +101,72 @@ export class TabComponent implements OnInit
 
   onNotify(indexes:any)
   {
-    console.log(indexes.i+ " "+indexes.j);
+    console.log("CLICKED:"+indexes.i+ " "+indexes.j);
 
-    /*for(let i=this.minIndex(indexes.i); i<=this.maxIndex(indexes.i); i++)
+    this.revealedIndexes = [];
+    
+    this.revealNeighbours(indexes, 0);
+
+   
+  }
+
+  getNeighbours(indexes:any)
+  {
+    let neighbours:any[] = [];
+    let k = 0;
+
+    for(let i=this.minIndex(indexes.i); i<=this.maxIndex(indexes.i); i++)
       for(let j=this.minIndex(indexes.j); j<=this.maxIndex(indexes.j); j++)
-        this.grille[i][j].isRevealed = true;*/  
+        {
+          neighbours[k++] = 
+          {
+            i : i,
+            j : j
+          }
+        }
+
+    return neighbours;
+  }
+
+  testNeighbours(neighbours:any[])
+  {
+    for(let n of neighbours)
+    {
+      if(this.grille[n.i][n.j].isMine === true || this.grille[n.i][n.j].isNumber !== 0 )
+        return false;
+    }
+
+    return true;
+  }
+
+  manageNeighbours(indexes:any, sizeRevealedIndexes:number)
+  {
+    //this.revealNeighbours(indexes, sizeRevealedIndexes);
+
+    
+
+    for(let n of neighbours)
+      this.revealNeighbours(n, sizeRevealedIndexes, true);
+    
+  }
+
+  revealNeighbours(indexes:any, sizeRevealedIndexes:number, testNeighbours:boolean)
+  {
+    for(let i=this.minIndex(indexes.i); i<=this.maxIndex(indexes.i); i++)
+      for(let j=this.minIndex(indexes.j); j<=this.maxIndex(indexes.j); j++)
+        {
+          this.revealedIndexes[sizeRevealedIndexes++] = 
+          {
+            i : i,
+            j : j
+          }
+        }
+      
+    if(testNeighbours === true)
+    {
+      let neighbours : any[] = this.getNeighbours(indexes);
+      
+    }
   }
 
   minIndex(index:number)

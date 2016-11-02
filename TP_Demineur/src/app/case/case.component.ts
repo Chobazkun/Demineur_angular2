@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, DoCheck} from '@angular/core';
 
 @Component({
   selector: 'app-case',
   templateUrl: './case.component.html',
   styleUrls: ['./case.component.css']
 })
-export class CaseComponent implements OnInit, OnChanges {
+export class CaseComponent implements OnInit, DoCheck {
 
   static urlCovered : string = "img/covered.png";
   static urlEmpty : string = "img/empty.png";
@@ -29,7 +29,7 @@ export class CaseComponent implements OnInit, OnChanges {
   notify: EventEmitter<any> = new EventEmitter<any>();
 
   @Input()
-  revealedIndexes = null;
+  revealedIndexes : any[] = null;
 
 
   constructor() 
@@ -41,9 +41,21 @@ export class CaseComponent implements OnInit, OnChanges {
   {
   }
 
-  ngOnChanges(changes:SimpleChanges)
+  ngDoCheck()
   {
-    console.log("Foobar");
+    if(this.revealedIndexes != null)
+    {
+      let index : any;
+
+        for(index of this.revealedIndexes)
+        {
+          if(this.proprietes.indexes.i === index.i && this.proprietes.indexes.j === index.j)
+          {
+            this.proprietes.isRevealed = true;
+            this.majUrl();
+          }
+        }
+    }
   }
 
   onClick()
