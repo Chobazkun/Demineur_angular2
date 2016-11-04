@@ -147,7 +147,7 @@ export class TabComponent implements OnInit
             });
       }
     }
-    this.service.error("Derp","Game over");
+    this.service.error("GAME OVER","Try again!");
   }
 
   getNeighbours(indexes:any)
