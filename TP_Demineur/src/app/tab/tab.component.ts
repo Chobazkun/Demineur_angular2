@@ -1,5 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { CaseComponent } from '../case/case.Component';
+import { NotificationsService } from 'angular2-notifications/';
+
 
 @Component({
   selector: 'app-tab',
@@ -13,9 +15,15 @@ export class TabComponent implements OnInit
   private counter = Array<number>();
   private numMines : number = 10;
   private revealedIndexes : any;
+  private status;
+  public options = {
+      position : ["bottom","right"],
+      clickToClose: true,
+      animate: "fromLeft"
+  };
 
 
-  constructor() 
+  constructor( private service: NotificationsService ) 
   {
     this.initCounter(this.tailleGrille);
 
@@ -25,9 +33,8 @@ export class TabComponent implements OnInit
 
     this.initNumbers();
 
-    for(let i=0; i<this.tailleGrille; i++)
-      for(let j=0; j<this.tailleGrille; j++)
-        console.log(this.grille[i][j]);
+    this.printGrille();
+
   }
 
   ngOnInit() 
@@ -43,7 +50,8 @@ export class TabComponent implements OnInit
   initGrille(size:number)
   {
     this.grille = [];
-
+    this.status = true;
+    
     for(let i=0; i<size; i++)
     {
       this.grille[i] = [];
@@ -55,6 +63,7 @@ export class TabComponent implements OnInit
           isRevealed: false,
           isMine: false,
           isNumber: 0,
+          status: '',
           indexes : 
           {
             i : i,
@@ -108,8 +117,37 @@ export class TabComponent implements OnInit
     console.log("CLICKED:"+indexes.i+ " "+indexes.j);
 
     this.revealedIndexes = [];
-    
-    this.manageNeighbours(indexes, 0);
+
+    this.gameStatus(indexes);
+
+    if(this.status === true)
+      this.manageNeighbours(indexes);
+  }
+
+  gameStatus(indexes:any)
+  {
+    if(this.grille[indexes.i][indexes.j].isMine === true)
+      this.gameOver(indexes);
+  }
+
+  gameOver(indexes:any)
+  {
+    this.status = false;
+    this.grille[indexes.i][indexes.j].status = 'gameOver';
+
+    for(let i=0; i<this.tailleGrille; i++)
+    {
+      for(let j=0; j<this.tailleGrille; j++)
+      {
+        if(this.grille[i][j].isMine === true)
+          this.revealedIndexes.push(
+            {
+              i:i,
+              j:j
+            });
+      }
+    }
+    this.service.error("Derp","Game over");
   }
 
   getNeighbours(indexes:any)
@@ -120,10 +158,13 @@ export class TabComponent implements OnInit
     for(let i=this.minIndex(indexes.i); i<=this.maxIndex(indexes.i); i++)
       for(let j=this.minIndex(indexes.j); j<=this.maxIndex(indexes.j); j++)
         {
-          neighbours[k++] = 
+          if(!(indexes.i === i && indexes.j === j))
           {
-            i : i,
-            j : j
+            neighbours[k++] = 
+            {
+              i : i,
+              j : j
+            }
           }
         }
 
@@ -137,62 +178,63 @@ export class TabComponent implements OnInit
 
     for(let n of neighbours)
     {
-      if(this.grille[n.i][n.j].isMine === false && this.grille[n.i][n.j].isNumber === 0 )
-        emptyNeighbours[k++] = n;
+      if(this.grille[n.i][n.j].isMine === false && this.grille[n.i][n.j].isNumber === 0)
+      {
+        if(this.indexListContains(n) === false)
+          emptyNeighbours[k++] = n;
+      }
     }
-
-    console.log("START");
-    for(let n of emptyNeighbours)
-      console.log(n);
-    console.log("END");
       
     return emptyNeighbours;
   }
 
-  revealNeighbours(neighbours:any[], sizeRevealedIndexes:number)
+  revealNeighbours(neighbours:any[])
   {
     for(let n of neighbours)
     {
-      if(n.isMine === false)
+      if(this.grille[n.i][n.j].isMine === false)
       {
-        this.revealedIndexes[sizeRevealedIndexes++] +=
+        this.revealedIndexes.push(
         {
           i : n.i,
           j : n.j
-        }
+        });
       }
     }  
   }
 
-  manageNeighbours(indexes:any, sizeRevealedIndexes:number)
+  manageNeighbours(indexes:any)
   { 
+    this.revealedIndexes.push( 
+    {
+      i : indexes.i,
+      j : indexes.j
+    });
+
     let neighbours = this.getNeighbours(indexes);
 
-    this.revealNeighbours(neighbours, sizeRevealedIndexes);
+    let emptyNeighbours = this.testNeighbours(neighbours);
 
-    for(let n of this.testNeighbours(neighbours))
-      this.manageNeighbours(n, sizeRevealedIndexes);
+    this.revealNeighbours(neighbours);
 
-    /*for(let i=this.minIndex(indexes.i); i<=this.maxIndex(indexes.i); i++)
-      for(let j=this.minIndex(indexes.j); j<=this.maxIndex(indexes.j); j++)
-      {
-        this.revealedIndexes[sizeRevealedIndexes++] = 
-        {
-          i : i,
-          j : j
-        }
-      }
-
-    if(testNeighbours.length === 0)
+    if(emptyNeighbours.length === 0)
       return;
     else
     {
-      let neighbours : any[] = this.getNeighbours(indexes);
+      for(let n of emptyNeighbours)
+        this.manageNeighbours(n);
+    }
+  }
 
-      for(let n of neighbours)
-        this.revealNeighbours(n, sizeRevealedIndexes, this.testNeighbours(n));
-      
-    }*/
+  indexListContains(indexes:any)
+  {
+    for(let ind of this.revealedIndexes)
+    {
+      if(ind.i === indexes.i && ind.j === indexes.j)
+        return true;
+    }
+
+    return false;
   }
 
   minIndex(index:number)
@@ -214,5 +256,26 @@ export class TabComponent implements OnInit
   getRandomIndex()
   {
     return Math.floor(Math.random() * (this.tailleGrille));
+  }
+
+    printGrille()
+  {
+    let text : string =  "  0  1  2  3  4  5  6  7  8\n";
+
+    for(let i=0; i<this.tailleGrille; i++)
+    {
+      text += i+" ";
+      for(let j=0; j<this.tailleGrille; j++)
+      {
+        if(this.grille[i][j].isMine)
+          text += " X ";
+        else
+          text += " . ";
+      }
+
+      text += "\n";
+    }
+
+    console.log(text);
   }
 }

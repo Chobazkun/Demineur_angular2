@@ -1,15 +1,7 @@
-
-<table>
+  
   <div class="ligne" *ngFor="let i of counter">
-    <tr>
-      <div class="col" *ngFor="let j of counter">
-        <td>
-          <app-case [proprietes]="grille[i][j]" (notify)="onNotify($event)" [revealedIndexes]="revealedIndexes"></app-case>
-        </td>
-      </div>
-    </tr> 
+    <div class="col" *ngFor="let j of counter">
+      <app-case [proprietes]="grille[j][i]" (notify)="onNotify($event)" [revealedIndexes]="revealedIndexes"></app-case>
+    </div>
   </div>
-</table>
-
-
-
+<simple-notifications [options]="options"></simple-notifications>

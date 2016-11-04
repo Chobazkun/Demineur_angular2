@@ -10,6 +10,8 @@ export class CaseComponent implements OnInit, DoCheck {
   static urlCovered : string = "img/covered.png";
   static urlEmpty : string = "img/empty.png";
   static urlMine: string = "img/mine.png";
+  static urlMineWrong: string = "img/mine-wrong.png";
+  static urlFlag: string = "img/flag-mine.png";
   static urlNumber1: string = "img/number-1.png";
   static urlNumber2: string = "img/number-2.png";
   static urlNumber3: string = "img/number-3.png";
@@ -58,15 +60,20 @@ export class CaseComponent implements OnInit, DoCheck {
     }
   }
 
-  onClick()
+  onClick(e)
   {
-    this.proprietes.isRevealed = !this.proprietes.isRevealed;
-    this.majUrl();
+    if(e.which === 1)
+    {
+      this.proprietes.isRevealed = !this.proprietes.isRevealed;
+      this.majUrl();
 
-    this.notify.emit(this.proprietes.indexes);
+      this.notify.emit(this.proprietes.indexes);
+    }
+    else if(e.which === 2)
+    {
+      this.urlImage = CaseComponent.urlFlag;
+    }
   }
-
-
 
   majUrl()
   {
@@ -120,7 +127,12 @@ export class CaseComponent implements OnInit, DoCheck {
     else
     {
       if(this.proprietes.isRevealed == true)
-        this.urlImage = CaseComponent.urlMine;
+      {
+        if(this.proprietes.status === 'gameOver')
+          this.urlImage = CaseComponent.urlMineWrong;
+        else
+          this.urlImage = CaseComponent.urlMine;
+      }
       else
         this.urlImage = CaseComponent.urlCovered;
     }

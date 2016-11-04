@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { CaseComponent } from './case/case.component';
 import { TabComponent } from './tab/tab.component';
+import { SimpleNotificationsModule } from 'angular2-notifications/';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { TabComponent } from './tab/tab.component';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    SimpleNotificationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
