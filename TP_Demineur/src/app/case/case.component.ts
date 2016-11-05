@@ -7,11 +7,13 @@ import { Component, OnInit, Input, Output, EventEmitter, DoCheck} from '@angular
 })
 export class CaseComponent implements OnInit, DoCheck {
 
-  static urlCovered : string = "img/covered.png";
-  static urlEmpty : string = "img/empty.png";
+  static urlCovered: string = "img/covered.png";
+  static urlEmpty: string = "img/empty.png";
   static urlMine: string = "img/mine.png";
   static urlMineWrong: string = "img/mine-wrong.png";
-  static urlFlag: string = "img/flag-mine.png";
+  static urlFlagMine: string = "img/flag-mine.png";
+  static urlFlagMineWrong: string = "img/flag-mine-wrong.png";
+  static urlFlagSuspect: string = "img/flag-suspect.png";
   static urlNumber1: string = "img/number-1.png";
   static urlNumber2: string = "img/number-2.png";
   static urlNumber3: string = "img/number-3.png";
@@ -22,7 +24,8 @@ export class CaseComponent implements OnInit, DoCheck {
   static urlNumber8: string = "img/number-8.png";
 
 
-  private urlImage : string;
+  private urlImage: string;
+  private counterFlag: number = 0;
   
   @Input()
   proprietes = null;
@@ -71,7 +74,34 @@ export class CaseComponent implements OnInit, DoCheck {
     }
     else if(e.which === 2)
     {
-      this.urlImage = CaseComponent.urlFlag;
+      console.log(this.counterFlag);
+      
+      switch(this.counterFlag)
+      {
+        case 0:
+        {
+          this.urlImage = CaseComponent.urlFlagMine;
+          this.counterFlag++;
+          break;
+        }
+        case 1:  
+        {
+          this.urlImage = CaseComponent.urlFlagMineWrong;
+          this.counterFlag++;
+          break;
+        }
+        case 2:
+        {  
+          this.urlImage = CaseComponent.urlFlagSuspect;
+          this.counterFlag++;
+          break;
+        }
+        default:
+        {
+          this.urlImage = CaseComponent.urlCovered;
+          this.counterFlag = 0;
+        }
+      }
     }
   }
 

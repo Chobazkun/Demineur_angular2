@@ -10,13 +10,13 @@ import { NotificationsService } from 'angular2-notifications/';
 })
 export class TabComponent implements OnInit 
 {
-  private grille : any[][];
-  private tailleGrille : number = 9;
+  private grille: any[][];
+  private tailleGrille: number = 9;
   private counter = Array<number>();
-  private numMines : number = 10;
-  private revealedIndexes : any;
+  private numMines: number = 10;
+  private revealedIndexes: any;
   private status;
-  public options = {
+  private options = {
       position : ["bottom","right"],
       clickToClose: true,
       animate: "fromLeft"
