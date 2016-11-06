@@ -36,10 +36,16 @@ export class CaseComponent implements OnInit, DoCheck {
   @Input()
   revealedIndexes : any[] = null;
 
+  @Input()
+  status : boolean = true;
+
+  @Input()
+  reset : string;
+
 
   constructor() 
   {
-    this.urlImage = CaseComponent.urlCovered;
+    this.initCase();
   }
 
   ngOnInit() 
@@ -52,59 +58,77 @@ export class CaseComponent implements OnInit, DoCheck {
     {
       let index : any;
 
-        for(index of this.revealedIndexes)
+      for(index of this.revealedIndexes)
+      {
+        if(this.proprietes.indexes.i === index.i && this.proprietes.indexes.j === index.j)
         {
-          if(this.proprietes.indexes.i === index.i && this.proprietes.indexes.j === index.j)
-          {
-            this.proprietes.isRevealed = true;
-            this.majUrl();
-          }
+          this.proprietes.isRevealed = true;
+          this.majUrl();
         }
+      }
+
+      if(this.reset === "reset")
+      {
+        this.initCase();
+        console.log(this.proprietes.isRevealed);
+        this.reset = "";
+      }
     }
   }
 
+  //Initialisation de la case
+  initCase()
+  {
+    this.urlImage = CaseComponent.urlCovered;
+  }
+
+  //Événement onClick sur la case
   onClick(e)
   {
-    if(e.which === 1)
+    if(this.status)
     {
-      this.proprietes.isRevealed = !this.proprietes.isRevealed;
-      this.majUrl();
-
-      this.notify.emit(this.proprietes.indexes);
-    }
-    else if(e.which === 2)
-    {
-      console.log(this.counterFlag);
-      
-      switch(this.counterFlag)
+      if(e.which === 1)
       {
-        case 0:
+        this.proprietes.isRevealed = !this.proprietes.isRevealed;
+        this.majUrl();
+
+        this.notify.emit(this.proprietes.indexes);
+      }
+      else if(e.which === 2)
+      {
+        console.log(this.counterFlag);
+        
+        switch(this.counterFlag)
         {
-          this.urlImage = CaseComponent.urlFlagMine;
-          this.counterFlag++;
-          break;
-        }
-        case 1:  
-        {
-          this.urlImage = CaseComponent.urlFlagMineWrong;
-          this.counterFlag++;
-          break;
-        }
-        case 2:
-        {  
-          this.urlImage = CaseComponent.urlFlagSuspect;
-          this.counterFlag++;
-          break;
-        }
-        default:
-        {
-          this.urlImage = CaseComponent.urlCovered;
-          this.counterFlag = 0;
+          case 0:
+          {
+            this.urlImage = CaseComponent.urlFlagMine;
+            this.counterFlag++;
+            break;
+          }
+          case 1:  
+          {
+            this.urlImage = CaseComponent.urlFlagMineWrong;
+            this.counterFlag++;
+            break;
+          }
+          case 2:
+          {  
+            this.urlImage = CaseComponent.urlFlagSuspect;
+            this.counterFlag++;
+            break;
+          }
+          default:
+          {
+            this.urlImage = CaseComponent.urlCovered;
+            this.counterFlag = 0;
+          }
         }
       }
     }
   }
 
+  //Mise à jour de l'image
   majUrl()
   {
     if(this.proprietes.isMine == false)
