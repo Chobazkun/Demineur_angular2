@@ -1,7 +1,0 @@
-  
-  <div class="ligne" *ngFor="let i of counter">
-    <div class="col" *ngFor="let j of counter">
-      <app-case [proprietes]="grille[j][i]" (notify)="onNotify($event)" [revealedIndexes]="revealedIndexes"></app-case>
-    </div>
-  </div>
-<simple-notifications [options]="options"></simple-notifications>
